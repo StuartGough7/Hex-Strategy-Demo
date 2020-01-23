@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HexMap : MonoBehaviour
 {
@@ -17,8 +15,9 @@ public class HexMap : MonoBehaviour
         {
             for (int col = 0; col < 10; col++)
             {
+                Hex hex = new Hex(col, row);
                 //Instantiate Hex Object
-                Instantiate(HexPrefab, new Vector3(col, 0, row), Quaternion.identity);
+                Instantiate(HexPrefab, hex.Position(), Quaternion.identity);
             }
         }
     }
