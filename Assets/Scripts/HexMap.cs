@@ -3,20 +3,22 @@
 public class HexMap : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject HexPrefab;
-    public Material[] HexMaterials;
     void Start()
     {
         GenerateMap();
     }
+    public GameObject HexPrefab;
+    public Material[] HexMaterials;
+    int mapHeight = 20;
+    int mapWidth = 40;
 
     public void GenerateMap()
     {
-        for (int row = 0; row < 10; row++)
+        for (int column = 0; column < mapWidth; column++)
         {
-            for (int col = 0; col < 10; col++)
+            for (int row = 0; row < mapHeight; row++)
             {
-                Hex hex = new Hex(col, row);
+                Hex hex = new Hex(column, row);
                 //Instantiate Hex Object
                 GameObject hexGO = Instantiate(HexPrefab, hex.Position(), Quaternion.identity, this.transform);
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
