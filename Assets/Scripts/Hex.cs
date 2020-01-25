@@ -21,19 +21,60 @@ public class Hex
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
 
+    float radius = 1f;
+
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2; // so this maths is only done once as a Hexs width to height ratio doesnt change
     /// <summary>
     /// returns the world space position (vector 3) of the Hex (based on the q,r,s co ordinate system given to the Object)
     /// </summary>
     public Vector3 Position()
     {
-        float radius = 1f;
-        float height = radius * 2;
-        float width = WIDTH_MULTIPLIER * height;
+        return new Vector3(
+            HexHorizontalSpacing() * (this.Q + this.R / 2f),
+            0,
+            this.R * HexVerticalSpacing()
+        );
+    }
 
-        float verticallSpacing = height * 0.75f; // The amount to offset a neighbouring Hex by verticallly
-        float horizontalSpacing = width; // The amount to offset a neighbouring Hex by horizontally
+    public float HexHeight()
+    {
+        return radius * 2;
+    }
 
-        return new Vector3(horizontalSpacing * (this.Q + this.R / 2f), 0, this.R * verticallSpacing);
+    public float HexWidth()
+    {
+        return WIDTH_MULTIPLIER * HexHeight();
+    }
+
+    public float HexVerticalSpacing()
+    {
+        return HexHeight() * 0.75f; // The amount to offset a neighbouring Hex by verticallly
+    }
+
+    public float HexHorizontalSpacing()
+    {
+        return HexWidth(); // The amount to offset a neighbouring Hex by verticallly
+    }
+
+
+    public Vector3 PositionFromCamera(Vector3 cameraPosition, int numColumns, int numRows)
+    {
+        float mapHeight = numRows * HexVerticalSpacing();
+        float mapWidth = numColumns * HexHorizontalSpacing();
+
+        Vector3 position = Position();
+
+        float widthsFromCameraToHex = (position.x - cameraPosition.x) / mapWidth; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
+
+        if (widthsFromCameraToHex > 0f)
+            widthsFromCameraToHex += 0.5f;
+        else
+            widthsFromCameraToHex -= 0.5f;
+
+        int numWidthsToFix = (int)widthsFromCameraToHex;
+
+        position.x -= numWidthsToFix * mapWidth;
+
+        return position;
     }
 }
