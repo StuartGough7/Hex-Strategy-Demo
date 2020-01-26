@@ -20,6 +20,8 @@ public class Hex
     public readonly int Q; // Column
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
+    public bool allowWrapEastWest = true;
+    public bool allowWrapNorthSouth = false;
 
     float radius = 1f;
 
@@ -59,21 +61,37 @@ public class Hex
 
     public Vector3 PositionFromCamera(Vector3 cameraPosition, int numColumns, int numRows)
     {
-        float mapHeight = numRows * HexVerticalSpacing();
         float mapWidth = numColumns * HexHorizontalSpacing();
+        float mapHeight = numRows * HexVerticalSpacing();
 
         Vector3 position = Position();
 
-        float widthsFromCameraToHex = (position.x - cameraPosition.x) / mapWidth; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
+        if (allowWrapEastWest)
+        {
+            float widthsFromCameraToHex = (position.x - cameraPosition.x) / mapWidth; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
 
-        if (widthsFromCameraToHex > 0f)
-            widthsFromCameraToHex += 0.5f;
-        else
-            widthsFromCameraToHex -= 0.5f;
+            if (widthsFromCameraToHex > 0f)
+                widthsFromCameraToHex += 0.5f;
+            else
+                widthsFromCameraToHex -= 0.5f;
 
-        int numWidthsToFix = (int)widthsFromCameraToHex;
+            int numWidthsToFix = (int)widthsFromCameraToHex;
 
-        position.x -= numWidthsToFix * mapWidth;
+            position.x -= numWidthsToFix * mapWidth;
+        }
+        if (allowWrapNorthSouth)
+        {
+            float heightsFromCameraToHex = (position.z - cameraPosition.z) / mapHeight; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
+
+            if (heightsFromCameraToHex > 0f)
+                heightsFromCameraToHex += 0.5f;
+            else
+                heightsFromCameraToHex -= 0.5f;
+
+            int numHeightssToFix = (int)heightsFromCameraToHex;
+
+            position.z -= numHeightssToFix * mapHeight;
+        }
 
         return position;
     }
