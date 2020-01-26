@@ -9,8 +9,8 @@ public class HexMap : MonoBehaviour
     }
     public GameObject HexPrefab;
     public Material[] HexMaterials;
-    int numRows = 20;
-    int numColumns = 40;
+    public int numRows = 20;
+    public int numColumns = 40;
 
     public void GenerateMap()
     {
@@ -22,6 +22,8 @@ public class HexMap : MonoBehaviour
                 //Instantiate Hex Object
                 GameObject hexGO = Instantiate(HexPrefab, hex.PositionFromCamera(Camera.main.transform.position, numColumns, numRows), Quaternion.identity, this.transform);
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
+                hexGO.GetComponent<HexComponent>().Hex = hex; // Gives the Hex Component script reference to the instantiated hex
+                hexGO.GetComponent<HexComponent>().HexMap = this; // Gives the Hex Component script reference to the instantiated hex
                 hexMR.material = HexMaterials[Random.Range(0, HexMaterials.Length)];
             }
         }
