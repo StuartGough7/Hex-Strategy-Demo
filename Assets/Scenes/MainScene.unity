@@ -130,7 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 170746702}
-  - component: {fileID: 170746704}
+  - component: {fileID: 170746703}
   m_Layer: 0
   m_Name: HexMap
   m_TagString: Untagged
@@ -152,7 +152,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &170746704
+--- !u!114 &170746703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 170746701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a446c119fc0c4f347a30704f7b402cdc, type: 3}
+  m_Script: {fileID: 11500000, guid: 8076fcb5bf9a0e343b63b40a16979bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HexPrefab: {fileID: 4682189456083792507, guid: f497547377d019148a56581b0ccc40c7,
@@ -178,8 +178,8 @@ MonoBehaviour:
   MatOcean: {fileID: 2100000, guid: 92b02fdf47c80b0449aee2ef5e59c35d, type: 2}
   MatPlain: {fileID: 2100000, guid: 1a5a2453fd9a08a43bff35085e5bcc1c, type: 2}
   MatMountain: {fileID: 2100000, guid: ff7f6d9adfe6a2748b83696d7dde9cb9, type: 2}
-  numRows: 30
-  numColumns: 60
+  numRows: 20
+  numColumns: 40
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
