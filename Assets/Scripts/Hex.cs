@@ -21,6 +21,9 @@ public class Hex
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
 
+    public float Elevation;
+    public float Moisture;
+
     // @TODO: Link with HexMap version for vertical/horizonatl looping
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;

@@ -42,11 +42,11 @@ public class HexMap : MonoBehaviour
 
         if (allowWrapEastWest)
         {
-            x = x % numRows;    //NOTE!! the modulo on x to num rows. This is due to the wrapping west east. ie row -1 will be row numRows -1
+            x = x % numColumns;    //NOTE!! the modulo on x to num rows. This is due to the wrapping west east. ie row -1 will be row numRows -1
         }
         if (allowWrapNorthSouth)
         {
-            y = y % numColumns;
+            y = y % numRows;
         }
 
         return hexes[x, y];
@@ -62,6 +62,7 @@ public class HexMap : MonoBehaviour
             for (int row = 0; row < numRows; row++)
             {
                 Hex hex = new Hex(column, row);
+                hex.Elevation = -1; // initially all hexxes under water
                 hexes[column, row] = hex;
 
                 Vector3 postionFromCamera = hex.PositionFromCamera(Camera.main.transform.position, numColumns, numRows);
@@ -72,15 +73,35 @@ public class HexMap : MonoBehaviour
                 hexGO.GetComponent<HexComponent>().Hex = hex; // Gives the Hex Component script reference to the instantiated hex
                 hexGO.GetComponent<HexComponent>().HexMap = this; // Gives the Hex Component script reference to the instantiated hex
                 hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}", column, row);
+            }
+        }
+        UpdateHexVisuals();
+    }
+
+    public void UpdateHexVisuals()
+    {
+        for (int column = 0; column < numColumns; column++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex hex = hexes[column, row];
+                GameObject hexGO = hexToGameObjectMap[hex];
 
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
-                hexMR.material = MatOcean;
+
+                if (hex.Elevation >= 0)
+                {
+                    hexMR.material = MatGrassland;
+                }
+                else
+                {
+                    hexMR.material = MatOcean;
+                }
 
                 MeshFilter hexMF = hexGO.GetComponentInChildren<MeshFilter>();
                 hexMF.mesh = MeshWater;
-
             }
         }
-    }
 
+    }
 }
