@@ -20,8 +20,10 @@ public class Hex
     public readonly int Q; // Column
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
-    public bool allowWrapEastWest = true;
-    public bool allowWrapNorthSouth = false;
+
+    // @TODO: Link with HexMap version for vertical/horizonatl looping
+    bool allowWrapEastWest = true;
+    bool allowWrapNorthSouth = false;
 
     float radius = 1f;
 
