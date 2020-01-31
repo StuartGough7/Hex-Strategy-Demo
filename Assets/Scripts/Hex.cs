@@ -100,4 +100,9 @@ public class Hex
 
         return position;
     }
+
+    public static float Distance(Hex a, Hex b)
+    {
+        return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
+    }
 }

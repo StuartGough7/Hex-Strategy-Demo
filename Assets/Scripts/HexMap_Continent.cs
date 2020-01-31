@@ -1,4 +1,5 @@
-﻿public class HexMap_Continent : HexMap
+﻿
+public class HexMap_Continent : HexMap
 {
     public override void GenerateMap()
     {
@@ -10,14 +11,16 @@
         UpdateHexVisuals();
     }
 
-    public void ElevateArea(int q, int r, int range)
+    public void ElevateArea(int q, int r, int range, float centerHeight = 0.5f)
     {
         Hex centerHex = GetHexAt(q, r);
         Hex[] areaOfHexes = GetHexesWithinRangeOf(centerHex, range);
 
         foreach (var item in areaOfHexes)
         {
-            item.Elevation = 0.5f;
+            if (item.Elevation < 0)
+                item.Elevation = 0;
+            item.Elevation += centerHeight * UnityEngine.Mathf.Lerp(1f, 0.1f, Hex.Distance(centerHex, item)) / range;
         }
     }
 }
