@@ -22,8 +22,8 @@ public class HexMap : MonoBehaviour
     public Material MatMountain;
 
 
-    public int numRows = 20;
-    public int numColumns = 40;
+    public int numRows = 30;
+    public int numColumns = 60;
     private Hex[,] hexes; // only setable in this class
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
 
@@ -103,5 +103,18 @@ public class HexMap : MonoBehaviour
             }
         }
 
+    }
+
+    public Hex[] GetHexesWithinRangeOf(Hex centerHex, int range)
+    {
+        List<Hex> results = new List<Hex>();
+        for (int dx = -range; dx <= range; dx++)
+        {
+            for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
+            {
+                results.Add(hexes[centerHex.Q + dx, centerHex.R + dy]);
+            }
+        }
+        return results.ToArray();
     }
 }

@@ -178,8 +178,8 @@ MonoBehaviour:
   MatOcean: {fileID: 2100000, guid: 92b02fdf47c80b0449aee2ef5e59c35d, type: 2}
   MatPlain: {fileID: 2100000, guid: 1a5a2453fd9a08a43bff35085e5bcc1c, type: 2}
   MatMountain: {fileID: 2100000, guid: ff7f6d9adfe6a2748b83696d7dde9cb9, type: 2}
-  numRows: 20
-  numColumns: 40
+  numRows: 30
+  numColumns: 60
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
