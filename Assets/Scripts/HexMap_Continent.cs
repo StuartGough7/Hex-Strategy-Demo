@@ -7,14 +7,21 @@ public class HexMap_Continent : HexMap
     {
         // First make the base map to generate all Hexs (all water)
         base.GenerateMap();
-        int numSplats = 5;//Random.Range(4, 8);
-        for (int i = 0; i < numSplats; i++)
+        int numContinents = 2;
+        int continentSpacing = 20;
+
+        for (int c = 0; c < numContinents; c++)
         {
-            int range = Random.Range(5, 8);
-            int y = Random.Range(range, numRows - range - 1);
-            int x = Random.Range(0, 10) - y / 2 + 20;
-            ElevateArea(x, y, range);
+            int numSplats = Random.Range(4, 8);
+            for (int i = 0; i < numSplats; i++)
+            {
+                int range = Random.Range(5, 8);
+                int y = Random.Range(range, numRows - range - 1);
+                int x = Random.Range(0, 10) - y / 2 + (c * continentSpacing);
+                ElevateArea(x, y, range);
+            }
         }
+
         UpdateHexVisuals();
     }
 
@@ -25,9 +32,7 @@ public class HexMap_Continent : HexMap
 
         foreach (var item in areaOfHexes)
         {
-            if (item.Elevation < 0)
-                item.Elevation = 0;
-            item.Elevation += centerHeight * Mathf.Lerp(1f, 0.1f, Hex.Distance(centerHex, item)) / range;
+            item.Elevation += centerHeight * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, item) / range);
         }
     }
 }

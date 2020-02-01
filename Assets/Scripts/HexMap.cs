@@ -43,10 +43,18 @@ public class HexMap : MonoBehaviour
         if (allowWrapEastWest)
         {
             x = x % numColumns;    //NOTE!! the modulo on x to num rows. This is due to the wrapping west east. ie row -1 will be row numRows -1
+            if (x < 0)
+            {
+                x += numColumns;
+            }
         }
         if (allowWrapNorthSouth)
         {
             y = y % numRows;
+            if (y < 0)
+            {
+                y += numRows;
+            }
         }
 
         return hexes[x, y];
@@ -112,7 +120,7 @@ public class HexMap : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
             {
-                results.Add(hexes[centerHex.Q + dx, centerHex.R + dy]);
+                results.Add(GetHexAt(centerHex.Q + dx, centerHex.R + dy));
             }
         }
         return results.ToArray();
