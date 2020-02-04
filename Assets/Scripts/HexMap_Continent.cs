@@ -7,9 +7,9 @@ public class HexMap_Continent : HexMap
     {
         // First make the base map to generate all Hexs (all water)
         base.GenerateMap();
-        int numContinents = 2;
-        int continentSpacing = 20;
-
+        int numContinents = 3;
+        int continentSpacing = numColumns / numContinents;
+        // Random.InitState(0); // this is to seed the random with the same val for repeatabity
         for (int c = 0; c < numContinents; c++)
         {
             int numSplats = Random.Range(4, 8);
@@ -19,6 +19,23 @@ public class HexMap_Continent : HexMap
                 int y = Random.Range(range, numRows - range - 1);
                 int x = Random.Range(0, 10) - y / 2 + (c * continentSpacing);
                 ElevateArea(x, y, range);
+            }
+        }
+
+        // Add noise to the elevation 
+        float noiseResolution = 0.1f;
+        float noiseScale = 4f; // Larger value makes more islands
+        Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+        float perlinNoiseSquareScale = Mathf.Max(numColumns, numRows);
+
+        for (int column = 0; column < numColumns; column++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex hex = GetHexAt(column, row);
+                float noiseAdded = Mathf.PerlinNoise(((float)column / perlinNoiseSquareScale / noiseResolution) + noiseOffset.x, ((float)row / perlinNoiseSquareScale / noiseResolution) + noiseOffset.y) - 0.5f; // this is a pseudo random predictable random nbumber btw -0.5 and 0.5 and repeats every whole number based on input ie 0.5f, 1.5f adn 1000.5f will return the same value
+                hex.Elevation += noiseAdded * noiseScale;
+                // had to cast float else int values would always resolve to 0 or 1
             }
         }
 
