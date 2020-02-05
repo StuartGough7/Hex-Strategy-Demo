@@ -106,25 +106,30 @@ public class HexMap : MonoBehaviour
                 GameObject hexGO = hexToGameObjectMap[hex];
 
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
+                MeshFilter hexMF = hexGO.GetComponentInChildren<MeshFilter>();
                 if (hex.Elevation >= HeightMountain)
                 {
                     hexMR.material = MatMountain;
+                    hexMF.mesh = MeshMountain;
                 }
                 else if (hex.Elevation >= HeightHill)
                 {
                     hexMR.material = MatGrassland;
+                    hexMF.mesh = MeshHill;
                 }
                 else if (hex.Elevation >= HeightFlat)
                 {
                     hexMR.material = MatPlain;
+                    hexMF.mesh = MeshFlat;
                 }
                 else
                 {
                     hexMR.material = MatOcean;
+                    hexMF.mesh = MeshWater;
                 }
 
-                MeshFilter hexMF = hexGO.GetComponentInChildren<MeshFilter>();
-                hexMF.mesh = MeshWater;
+
+
             }
         }
 
