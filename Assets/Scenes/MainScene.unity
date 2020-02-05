@@ -180,7 +180,7 @@ MonoBehaviour:
   MatMountain: {fileID: 2100000, guid: ff7f6d9adfe6a2748b83696d7dde9cb9, type: 2}
   HeightMountain: 1
   HeightHill: 0.6
-  HeightFlat: 0.2
+  HeightFlat: 0
   numRows: 30
   numColumns: 60
 --- !u!1 &705507993

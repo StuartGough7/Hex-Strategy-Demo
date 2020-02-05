@@ -11,7 +11,7 @@ public class HexMap_Continent : HexMap
         base.GenerateMap();
         int numContinents = 3;
         int continentSpacing = numColumns / numContinents;
-        // Random.InitState(0); // this is to seed the random with the same val for repeatabity
+        Random.InitState(0); // this is to seed the random with the same val for repeatabity
         for (int c = 0; c < numContinents; c++)
         {
             int numSplats = Random.Range(4, 8);
@@ -44,14 +44,14 @@ public class HexMap_Continent : HexMap
         UpdateHexVisuals();
     }
 
-    public void ElevateArea(int q, int r, int range, float centerHeight = 1f)
+    public void ElevateArea(int q, int r, int range, float centerHeight = 0.8f)
     {
         Hex centerHex = GetHexAt(q, r);
         Hex[] areaOfHexes = GetHexesWithinRangeOf(centerHex, range);
 
         foreach (Hex item in areaOfHexes)
         {
-            item.Elevation = centerHeight * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, item) / range);
+            item.Elevation = centerHeight * Mathf.Lerp(1f, 0.25f, Mathf.Pow(Hex.Distance(centerHex, item) / range, 2f));
         }
     }
 }

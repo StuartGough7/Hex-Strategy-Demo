@@ -24,7 +24,7 @@ public class HexMap : MonoBehaviour
     // Tiles with height above x is given its appropriate mesh y
     public float HeightMountain = 1f;
     public float HeightHill = 0.6f;
-    public float HeightFlat = 0.2f;
+    public float HeightFlat = 0f;
 
 
     public int numRows = 30;
@@ -32,7 +32,7 @@ public class HexMap : MonoBehaviour
     private Hex[,] hexes; // only setable in this class
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
 
-    // @TODO: Link with Hex version for vertical/horizonatl looping
+    // @TODO: Link with Hex version for vertical/horizontal looping
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;
 
