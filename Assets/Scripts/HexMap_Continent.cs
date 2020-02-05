@@ -1,4 +1,6 @@
 ﻿
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HexMap_Continent : HexMap
@@ -16,7 +18,7 @@ public class HexMap_Continent : HexMap
             for (int i = 0; i < numSplats; i++)
             {
                 int range = Random.Range(5, 8);
-                int y = Random.Range(range, numRows - range - 1);
+                int y = Random.Range(range, numRows - range);
                 int x = Random.Range(0, 10) - y / 2 + (c * continentSpacing);
                 ElevateArea(x, y, range);
             }
@@ -24,7 +26,7 @@ public class HexMap_Continent : HexMap
 
         // Add noise to the elevation 
         float noiseResolution = 0.1f;
-        float noiseScale = 4f; // Larger value makes more islands
+        float noiseScale = 2f; // Larger value makes more islands
         Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
         float perlinNoiseSquareScale = Mathf.Max(numColumns, numRows);
 
@@ -47,9 +49,9 @@ public class HexMap_Continent : HexMap
         Hex centerHex = GetHexAt(q, r);
         Hex[] areaOfHexes = GetHexesWithinRangeOf(centerHex, range);
 
-        foreach (var item in areaOfHexes)
+        foreach (Hex item in areaOfHexes)
         {
-            item.Elevation += centerHeight * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, item) / range);
+            item.Elevation = centerHeight * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, item) / range);
         }
     }
 }

@@ -21,6 +21,11 @@ public class HexMap : MonoBehaviour
     public Material MatPlain;
     public Material MatMountain;
 
+    // Tiles with height above x is given its appropriate mesh y
+    public float HeightMountain = 1f;
+    public float HeightHill = 0.6f;
+    public float HeightFlat = 0.2f;
+
 
     public int numRows = 30;
     public int numColumns = 60;
@@ -57,6 +62,11 @@ public class HexMap : MonoBehaviour
             }
         }
 
+        if (x < 0 || y < 0)
+        {
+            return null; // This is to retrieve the relevant area of the map even if there is overflow out of the map
+        }
+
         return hexes[x, y];
     }
 
@@ -70,7 +80,7 @@ public class HexMap : MonoBehaviour
             for (int row = 0; row < numRows; row++)
             {
                 Hex hex = new Hex(column, row);
-                hex.Elevation = -1; // initially all hexxes under water
+                hex.Elevation = -0.5f; // initially all hexxes under water
                 hexes[column, row] = hex;
 
                 Vector3 postionFromCamera = hex.PositionFromCamera(Camera.main.transform.position, numColumns, numRows);
@@ -96,10 +106,17 @@ public class HexMap : MonoBehaviour
                 GameObject hexGO = hexToGameObjectMap[hex];
 
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
-
-                if (hex.Elevation >= 0)
+                if (hex.Elevation >= HeightMountain)
+                {
+                    hexMR.material = MatMountain;
+                }
+                else if (hex.Elevation >= HeightHill)
                 {
                     hexMR.material = MatGrassland;
+                }
+                else if (hex.Elevation >= HeightFlat)
+                {
+                    hexMR.material = MatPlain;
                 }
                 else
                 {
@@ -120,7 +137,11 @@ public class HexMap : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
             {
-                results.Add(GetHexAt(centerHex.Q + dx, centerHex.R + dy));
+                Hex retrievedHex = GetHexAt(centerHex.Q + dx, centerHex.R + dy);
+                if (retrievedHex != null)
+                {
+                    results.Add(retrievedHex);
+                }
             }
         }
         return results.ToArray();
