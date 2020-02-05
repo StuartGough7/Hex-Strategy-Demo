@@ -7,11 +7,12 @@
 
 public class Hex
 {
-    public Hex(int q, int r) // constructor
+    public Hex(int q, int r, HexMap hexMap) // constructor
     {
         this.Q = q;
         this.R = r;
         this.S = -(q + r);
+        this.hexMap = hexMap;
     }
 
     // Q + R + S = 0 for cubic representation of Hex
@@ -20,6 +21,7 @@ public class Hex
     public readonly int Q; // Column
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
+    private readonly HexMap hexMap;
 
     public float Elevation;
     public float Moisture;
@@ -103,6 +105,7 @@ public class Hex
 
     public static float Distance(Hex a, Hex b)
     {
+        //@TODO: Fix for wrapping
         return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
     }
 }

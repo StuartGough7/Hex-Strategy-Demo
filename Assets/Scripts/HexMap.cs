@@ -79,7 +79,7 @@ public class HexMap : MonoBehaviour
         {
             for (int row = 0; row < numRows; row++)
             {
-                Hex hex = new Hex(column, row);
+                Hex hex = new Hex(column, row, this); // This is passing the HexMap to the Hex so it is aware of certain Map parameters
                 hex.Elevation = -0.5f; // initially all hexxes under water
                 hexes[column, row] = hex;
 
