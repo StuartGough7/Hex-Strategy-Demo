@@ -9,9 +9,9 @@ public class HexMap_Continent : HexMap
     {
         // First make the base map to generate all Hexs (all water)
         base.GenerateMap();
-        int numContinents = 3;
+        int numContinents = 2;
         int continentSpacing = numColumns / numContinents;
-        Random.InitState(0); // this is to seed the random with the same val for repeatabity
+        //Random.InitState(0); // this is to seed the random with the same val for repeatabity
         for (int c = 0; c < numContinents; c++)
         {
             int numSplats = Random.Range(4, 8);
