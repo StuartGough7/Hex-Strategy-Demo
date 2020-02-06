@@ -15,6 +15,12 @@ public class Hex
         this.hexMap = hexMap;
     }
 
+    public object this[string propertyName]
+    {
+        get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
+        set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
+    }
+
     // Q + R + S = 0 for cubic representation of Hex
     // S = - Q + R
     // readonly means these values can only be assigned once (ie the position of the Hex cannot be changed... Something to consider in Future)
@@ -23,8 +29,8 @@ public class Hex
     public readonly int S; // Sum of Column and row ()
     private readonly HexMap hexMap;
 
-    public float Elevation;
-    public float Moisture;
+    public float Elevation { get; set; }
+    public float Moisture { get; set; }
 
     // @TODO: Link with HexMap version for vertical/horizonatl looping
     bool allowWrapEastWest = true;

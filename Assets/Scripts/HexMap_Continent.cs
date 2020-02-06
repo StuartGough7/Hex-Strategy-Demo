@@ -24,9 +24,13 @@ public class HexMap_Continent : HexMap
             }
         }
 
-        // Add noise to the elevation 
-        float noiseResolution = 0.1f;
-        float noiseScale = 2f; // Larger value makes more islands
+        this.addNoiseToMap(2f, 0.1f, "Elevation");
+
+        UpdateHexVisuals();
+    }
+
+    private void addNoiseToMap(float noiseScale, float noiseResolution, string hexProperty)
+    {
         Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
         float perlinNoiseSquareScale = Mathf.Max(numColumns, numRows);
 
@@ -36,12 +40,9 @@ public class HexMap_Continent : HexMap
             {
                 Hex hex = GetHexAt(column, row);
                 float noiseAdded = Mathf.PerlinNoise(((float)column / perlinNoiseSquareScale / noiseResolution) + noiseOffset.x, ((float)row / perlinNoiseSquareScale / noiseResolution) + noiseOffset.y) - 0.5f; // this is a pseudo random predictable random nbumber btw -0.5 and 0.5 and repeats every whole number based on input ie 0.5f, 1.5f adn 1000.5f will return the same value
-                hex.Elevation += noiseAdded * noiseScale;
-                // had to cast float else int values would always resolve to 0 or 1
+                hex[hexProperty] = (float)hex[hexProperty] + noiseAdded * noiseScale;
             }
         }
-
-        UpdateHexVisuals();
     }
 
     public void ElevateArea(int q, int r, int range, float centerHeight = 0.8f)
