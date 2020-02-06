@@ -25,6 +25,7 @@ public class HexMap_Continent : HexMap
         }
 
         this.addNoiseToMap(2f, 0.1f, "Elevation");
+        this.addNoiseToMap(2f, 0.05f, "Moisture");
 
         UpdateHexVisuals();
     }

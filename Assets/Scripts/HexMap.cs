@@ -9,6 +9,7 @@ public class HexMap : MonoBehaviour
         GenerateMap();
     }
     public GameObject HexPrefab;
+    public GameObject ForestPrefab;
 
 
     public Mesh MeshWater;
@@ -16,15 +17,20 @@ public class HexMap : MonoBehaviour
     public Mesh MeshHill;
     public Mesh MeshMountain;
 
-    public Material MatGrassland;
+    public Material MatDesert;
     public Material MatOcean;
     public Material MatPlain;
+    public Material MatGrassland;
     public Material MatMountain;
 
     // Tiles with height above x is given its appropriate mesh y
     public float HeightMountain = 1f;
     public float HeightHill = 0.6f;
     public float HeightFlat = 0f;
+    [System.NonSerialized] public float MoistureJungle = 1f;
+    [System.NonSerialized] public float MoistureForest = 0.5f;
+    [System.NonSerialized] public float MoistureGrasslands = 0f;
+    [System.NonSerialized] public float MoisturePlains = -0.75f;
 
 
     public int numRows = 30;
@@ -107,6 +113,47 @@ public class HexMap : MonoBehaviour
 
                 MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
                 MeshFilter hexMF = hexGO.GetComponentInChildren<MeshFilter>();
+
+                if (hex.Elevation >= HeightFlat && hex.Elevation < HeightMountain)
+                {
+                    if (hex.Moisture >= MoistureJungle)
+                    {
+                        hexMR.material = MatGrassland;
+
+                        // Spawn trees
+                        Vector3 p = hexGO.transform.position;
+                        if (hex.Elevation >= HeightHill)
+                        {
+                            p.y += 0.25f;
+                        }
+
+                    }
+                    else if (hex.Moisture >= MoistureForest)
+                    {
+                        hexMR.material = MatMountain;
+
+                        // Spawn trees
+                        Vector3 p = hexGO.transform.position;
+                        if (hex.Elevation >= HeightHill)
+                        {
+                            p.y += 0.25f;
+                        }
+                        Instantiate(ForestPrefab, p, Quaternion.identity, hexGO.transform);
+                    }
+                    else if (hex.Moisture >= MoistureGrasslands)
+                    {
+                        hexMR.material = MatGrassland;
+                    }
+                    else if (hex.Moisture >= MoisturePlains)
+                    {
+                        hexMR.material = MatPlain;
+                    }
+                    else
+                    {
+                        hexMR.material = MatDesert;
+                    }
+                }
+
                 if (hex.Elevation >= HeightMountain)
                 {
                     hexMR.material = MatMountain;
@@ -114,12 +161,10 @@ public class HexMap : MonoBehaviour
                 }
                 else if (hex.Elevation >= HeightHill)
                 {
-                    hexMR.material = MatGrassland;
                     hexMF.mesh = MeshHill;
                 }
                 else if (hex.Elevation >= HeightFlat)
                 {
-                    hexMR.material = MatPlain;
                     hexMF.mesh = MeshFlat;
                 }
                 else
@@ -127,8 +172,6 @@ public class HexMap : MonoBehaviour
                     hexMR.material = MatOcean;
                     hexMF.mesh = MeshWater;
                 }
-
-
 
             }
         }

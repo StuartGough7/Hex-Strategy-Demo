@@ -166,6 +166,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HexPrefab: {fileID: 4682189456083792507, guid: f497547377d019148a56581b0ccc40c7,
     type: 3}
+  ForestPrefab: {fileID: 4675219505843320334, guid: 64c1fdb542879d74f9059a45e8314a24,
+    type: 3}
   MeshWater: {fileID: 2534964839176971238, guid: 100e4befd660ad8409a4a62e64b2659f,
     type: 3}
   MeshFlat: {fileID: 2534964839176971238, guid: 100e4befd660ad8409a4a62e64b2659f,
@@ -174,9 +176,10 @@ MonoBehaviour:
     type: 3}
   MeshMountain: {fileID: 2534964839176971238, guid: c30b768a333551343b243496d53f1f44,
     type: 3}
-  MatGrassland: {fileID: 2100000, guid: 4208ecc7ab0430d4aa4a543ea009b586, type: 2}
+  MatDesert: {fileID: 2100000, guid: fde6ab82749e825489956c8a5cb609f1, type: 2}
   MatOcean: {fileID: 2100000, guid: 92b02fdf47c80b0449aee2ef5e59c35d, type: 2}
   MatPlain: {fileID: 2100000, guid: 1a5a2453fd9a08a43bff35085e5bcc1c, type: 2}
+  MatGrassland: {fileID: 2100000, guid: 4208ecc7ab0430d4aa4a543ea009b586, type: 2}
   MatMountain: {fileID: 2100000, guid: ff7f6d9adfe6a2748b83696d7dde9cb9, type: 2}
   HeightMountain: 1
   HeightHill: 0.6
