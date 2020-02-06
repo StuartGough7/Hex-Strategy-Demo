@@ -10,6 +10,7 @@ public class HexMap : MonoBehaviour
     }
     public GameObject HexPrefab;
     public GameObject ForestPrefab;
+    public GameObject JunglePrefab;
 
 
     public Mesh MeshWater;
@@ -28,7 +29,7 @@ public class HexMap : MonoBehaviour
     public float HeightHill = 0.6f;
     public float HeightFlat = 0f;
     [System.NonSerialized] public float MoistureJungle = 1f;
-    [System.NonSerialized] public float MoistureForest = 0.5f;
+    [System.NonSerialized] public float MoistureForest = 0.3f;
     [System.NonSerialized] public float MoistureGrasslands = 0f;
     [System.NonSerialized] public float MoisturePlains = -0.75f;
 
@@ -130,7 +131,7 @@ public class HexMap : MonoBehaviour
                     }
                     else if (hex.Moisture >= MoistureForest)
                     {
-                        hexMR.material = MatMountain;
+                        hexMR.material = MatGrassland;
 
                         // Spawn trees
                         Vector3 p = hexGO.transform.position;
