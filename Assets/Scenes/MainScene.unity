@@ -183,11 +183,7 @@ MonoBehaviour:
   MatPlain: {fileID: 2100000, guid: 1a5a2453fd9a08a43bff35085e5bcc1c, type: 2}
   MatGrassland: {fileID: 2100000, guid: 4208ecc7ab0430d4aa4a543ea009b586, type: 2}
   MatMountain: {fileID: 2100000, guid: ff7f6d9adfe6a2748b83696d7dde9cb9, type: 2}
-  HeightMountain: 1
-  HeightHill: 0.6
-  HeightFlat: 0
-  numRows: 30
-  numColumns: 60
+  UnitDwarfPrefab: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,3 +399,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18856a7841f3a61479ebdbadd4dc4eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1188250817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1188250818}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1188250818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188250817}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.128418, y: 9.292969, z: 10.964844}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
