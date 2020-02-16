@@ -23,19 +23,23 @@ public class HexMap : MonoBehaviour
     public Material MatPlain;
     public Material MatGrassland;
     public Material MatMountain;
+    public GameObject UnitDwarfPrefab;
+
 
     // Tiles with height above x is given its appropriate mesh y
-    public float HeightMountain = 1f;
-    public float HeightHill = 0.6f;
-    public float HeightFlat = 0f;
+    // Serializing is assigns the variable in memory (basically you can control the variable in the inspector which can lead to confusion, this "hides" it from the inspector 
+    // (hiding would actually still not work as the value is still saved as whatever it was when the script was compiled))
+    [System.NonSerialized] public float HeightMountain = 1f;
+    [System.NonSerialized] public float HeightHill = 0.6f;
+    [System.NonSerialized] public float HeightFlat = 0f;
     [System.NonSerialized] public float MoistureJungle = 1f;
     [System.NonSerialized] public float MoistureForest = 0.3f;
     [System.NonSerialized] public float MoistureGrasslands = 0f;
     [System.NonSerialized] public float MoisturePlains = -0.75f;
 
 
-    public int numRows = 30;
-    public int numColumns = 60;
+    [System.NonSerialized] public int numRows = 30;
+    [System.NonSerialized] public int numColumns = 60;
     private Hex[,] hexes; // only setable in this class
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
 
@@ -101,6 +105,7 @@ public class HexMap : MonoBehaviour
             }
         }
         UpdateHexVisuals();
+        SpawnUnitAt(UnitDwarfPrefab, 28, 13);
     }
 
     public void UpdateHexVisuals()
@@ -195,4 +200,24 @@ public class HexMap : MonoBehaviour
         }
         return results.ToArray();
     }
+
+    public void SpawnUnitAt(GameObject prefab, int q, int r)
+    {
+        //if (unitToGameObjectMap == null)
+        //{
+        //    unitToGameObjectMap = new Dictionary<Unit, GameObject>();
+        //}
+
+        Hex hexToSpawnAt = GetHexAt(q, r);
+        GameObject hexToSpawnAtGO = hexToGameObjectMap[hexToSpawnAt];
+        //unit.SetHex(myHex);
+
+        GameObject unitGO = Instantiate(prefab, hexToSpawnAtGO.transform.position, Quaternion.identity, hexToSpawnAtGO.transform);
+        //unit.OnObjectMoved += unitGO.GetComponent<UnitView>().OnUnitMoved;
+
+        //CurrentPlayer.AddUnit(unit);
+        //unit.OnObjectDestroyed += OnUnitDestroyed;
+        //unitToGameObjectMap.Add(unit, unitGO);
+    }
+
 }

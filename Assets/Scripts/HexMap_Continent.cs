@@ -11,7 +11,7 @@ public class HexMap_Continent : HexMap
         base.GenerateMap();
         int numContinents = 2;
         int continentSpacing = numColumns / numContinents;
-        //Random.InitState(0); // this is to seed the random with the same val for repeatabity
+        Random.InitState(0); // this is to seed the random with the same val for repeatabity
         for (int c = 0; c < numContinents; c++)
         {
             int numSplats = Random.Range(4, 8);
