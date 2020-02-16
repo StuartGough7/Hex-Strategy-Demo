@@ -97,6 +97,7 @@ public class HexMap : MonoBehaviour
                 Vector3 postionFromCamera = hex.PositionFromCamera(Camera.main.transform.position, numColumns, numRows);
                 //Instantiate Hex Object
                 GameObject hexGO = Instantiate(HexPrefab, postionFromCamera, Quaternion.identity, this.transform);
+                hexGO.name = string.Format("Hex {0}, {1}", column, row); // naming the object in the Heirachy
                 hexToGameObjectMap.Add(hex, hexGO); // add the link between hex and gameObject. NOTE! you can add to a directionary with hexToGameObjectMap.Add(hex, hexGO) but this is fine too
 
                 hexGO.GetComponent<HexComponent>().Hex = hex; // Gives the Hex Component script reference to the instantiated hex
