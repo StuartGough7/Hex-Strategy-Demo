@@ -8,6 +8,7 @@ public class HexMap : MonoBehaviour
     {
         GenerateMap();
     }
+
     public GameObject HexPrefab;
     public GameObject ForestPrefab;
     public GameObject JunglePrefab;
@@ -42,6 +43,8 @@ public class HexMap : MonoBehaviour
     [System.NonSerialized] public int numColumns = 60;
     private Hex[,] hexes; // only setable in this class
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
+    private Dictionary<HexMapObject_Unit, GameObject> unitToGameObjectMap;
+
 
     // @TODO: Link with Hex version for vertical/horizontal looping
     bool allowWrapEastWest = true;
@@ -106,7 +109,8 @@ public class HexMap : MonoBehaviour
             }
         }
         UpdateHexVisuals();
-        SpawnUnitAt(UnitDwarfPrefab, 28, 13);
+        HexMapObject_Unit Dwarf = new HexMapObject_Unit();
+        SpawnUnitAt(Dwarf, UnitDwarfPrefab, 28, 13);
     }
 
     public void UpdateHexVisuals()
@@ -202,18 +206,18 @@ public class HexMap : MonoBehaviour
         return results.ToArray();
     }
 
-    public void SpawnUnitAt(GameObject prefab, int q, int r)
+    public void SpawnUnitAt(HexMapObject_Unit unit, GameObject prefab, int q, int r)
     {
-        //if (unitToGameObjectMap == null)
-        //{
-        //    unitToGameObjectMap = new Dictionary<Unit, GameObject>();
-        //}
+        if (unitToGameObjectMap == null)
+        {
+            unitToGameObjectMap = new Dictionary<HexMapObject_Unit, GameObject>();
+        }
 
         Hex hexToSpawnAt = GetHexAt(q, r);
         GameObject hexToSpawnAtGO = hexToGameObjectMap[hexToSpawnAt];
-        //unit.SetHex(myHex);
-
         GameObject unitGO = Instantiate(prefab, hexToSpawnAtGO.transform.position, Quaternion.identity, hexToSpawnAtGO.transform);
+
+        unit.SetHex(hexToSpawnAt);
         //unit.OnObjectMoved += unitGO.GetComponent<UnitView>().OnUnitMoved;
 
         //CurrentPlayer.AddUnit(unit);
