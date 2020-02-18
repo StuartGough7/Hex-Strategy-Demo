@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CameraMouseController : MonoBehaviour
+public class MouseController : MonoBehaviour
 {
     // Use this for initialization
     void Start()

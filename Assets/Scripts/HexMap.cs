@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class HexMap : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        GenerateMap();
-    }
-
     public GameObject HexPrefab;
     public GameObject ForestPrefab;
     public GameObject JunglePrefab;
@@ -25,6 +19,7 @@ public class HexMap : MonoBehaviour
     public Material MatGrassland;
     public Material MatMountain;
     public GameObject UnitDwarfPrefab;
+    HexMapObject_Unit Dwarf = new HexMapObject_Unit();
 
 
     // Tiles with height above x is given its appropriate mesh y
@@ -44,12 +39,27 @@ public class HexMap : MonoBehaviour
     private Hex[,] hexes; // only setable in this class
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
     private Dictionary<HexMapObject_Unit, GameObject> unitToGameObjectMap;
-
+    private Dictionary<GameObject, Hex> gameObjectToHexMap;
 
     // @TODO: Link with Hex version for vertical/horizontal looping
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        GenerateMap();
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            Debug.Log("Move time");
+            Hex toMoveto = new Hex(29, 13, this);
+            Dwarf.SetHex(toMoveto);
+        }
+    }
     public Hex GetHexAt(int x, int y)
     {
         if (hexes == null)
@@ -84,6 +94,45 @@ public class HexMap : MonoBehaviour
         return hexes[x, y];
     }
 
+    public Vector3 GetHexPosition(int q, int r)
+    {
+        Hex hex = GetHexAt(q, r);
+        return GetHexPosition(hex);
+    }
+
+    public Vector3 GetHexPosition(Hex hex)
+    {
+        return hex.PositionFromCamera(Camera.main.transform.position, numRows, numColumns);
+    }
+
+    public Hex GetHexFromGameObject(GameObject hexGO)
+    {
+        if (gameObjectToHexMap.ContainsKey(hexGO))
+        {
+            return gameObjectToHexMap[hexGO];
+        }
+        return null;
+    }
+
+    public GameObject GetHexGO(Hex h)
+    {
+        if (hexToGameObjectMap.ContainsKey(h))
+        {
+            return hexToGameObjectMap[h];
+        }
+        return null;
+    }
+
+    public GameObject GetUnitGO(HexMapObject_Unit c)
+    {
+        if (unitToGameObjectMap.ContainsKey(c))
+        {
+            return unitToGameObjectMap[c];
+        }
+        return null;
+    }
+
+
     virtual public void GenerateMap()
     {
         hexes = new Hex[numColumns, numRows];
@@ -109,7 +158,6 @@ public class HexMap : MonoBehaviour
             }
         }
         UpdateHexVisuals();
-        HexMapObject_Unit Dwarf = new HexMapObject_Unit();
         SpawnUnitAt(Dwarf, UnitDwarfPrefab, 28, 13);
     }
 
@@ -218,7 +266,7 @@ public class HexMap : MonoBehaviour
         GameObject unitGO = Instantiate(prefab, hexToSpawnAtGO.transform.position, Quaternion.identity, hexToSpawnAtGO.transform);
 
         unit.SetHex(hexToSpawnAt);
-        //unit.OnObjectMoved += unitGO.GetComponent<UnitView>().OnUnitMoved;
+        unit.OnObjectMoved += unitGO.GetComponent<HexMapObject_UnitVisuals>().OnUnitMoved;
 
         //CurrentPlayer.AddUnit(unit);
         //unit.OnObjectDestroyed += OnUnitDestroyed;

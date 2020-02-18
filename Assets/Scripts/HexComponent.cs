@@ -4,8 +4,11 @@ public class HexComponent : MonoBehaviour
 {
     public Hex Hex;
     public HexMap HexMap;
+    public float VerticalOffset = 0; // Map objects on this hex should be rendered higher than usual
+
+
     public void UpdateHexPosition()
     {
-        this.transform.position = Hex.PositionFromCamera(Camera.main.transform.position, HexMap.numColumns, HexMap.numRows);
+        transform.position = Hex.PositionFromCamera(Camera.main.transform.position, HexMap.numColumns, HexMap.numRows);
     }
 }

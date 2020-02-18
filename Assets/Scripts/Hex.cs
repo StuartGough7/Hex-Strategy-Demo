@@ -12,7 +12,7 @@ public class Hex
         this.Q = q;
         this.R = r;
         this.S = -(q + r);
-        this.hexMap = hexMap;
+        this.HexMap = hexMap;
     }
 
     public object this[string propertyName]
@@ -27,7 +27,7 @@ public class Hex
     public readonly int Q; // Column
     public readonly int R; // Row
     public readonly int S; // Sum of Column and row ()
-    private readonly HexMap hexMap;
+    public readonly HexMap HexMap;
 
     public float Elevation { get; set; }
     public float Moisture { get; set; }
@@ -71,6 +71,11 @@ public class Hex
         return HexWidth(); // The amount to offset a neighbouring Hex by verticallly
     }
 
+    //Method overload to call directly from a single Hex
+    public Vector3 PositionFromCamera()
+    {
+        return HexMap.GetHexPosition(this);
+    }
 
     public Vector3 PositionFromCamera(Vector3 cameraPosition, int numColumns, int numRows)
     {
