@@ -176,7 +176,7 @@ MonoBehaviour:
     type: 3}
   MeshHill: {fileID: 2534964839176971238, guid: 45ce994c297be77409d66024dcdb16e9,
     type: 3}
-  MeshMountain: {fileID: 2534964839176971238, guid: c30b768a333551343b243496d53f1f44,
+  MeshMountain: {fileID: -2453071139370052643, guid: dfca5feb067181f4699b8f6a62e5f8ad,
     type: 3}
   MatDesert: {fileID: 2100000, guid: fde6ab82749e825489956c8a5cb609f1, type: 2}
   MatOcean: {fileID: 2100000, guid: 92b02fdf47c80b0449aee2ef5e59c35d, type: 2}
