@@ -1,25 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 public class MouseController : MonoBehaviour
 {
-  // Use this for initialization
-  void Start()
-  {
-    Update_CurrentFunc = Update_DetectModeStart;
-  }
-
-  // Generic bookkeeping variables
-  Vector3 lastMousePosition;  // From Input.mousePosition
-
-  // Camera Dragging bookkeeping variables
-  int mouseDragThreshold = 1; // Threshold of mouse movement to start a drag
+  int mouseDragThreshold = 1;                               // Threshold of mouse movement to start a drag
+  Vector3 lastMousePosition;                                // From Input.mousePosition
   Vector3 lastMouseGroundPlanePosition;
   Vector3 cameraTargetOffset;
   delegate void UpdateFunc();
   UpdateFunc Update_CurrentFunc;
+
+  void Start()
+  {
+    Update_CurrentFunc = Update_DetectModeStart;
+  }
 
   void Update()
   {
@@ -108,15 +101,13 @@ public class MouseController : MonoBehaviour
   Vector3 MouseToGroundPlane(Vector3 mousePos)
   {
     Ray mouseRay = Camera.main.ScreenPointToRay(mousePos);
-    // What is the point at which the mouse ray intersects Y=0
-    if (mouseRay.direction.y >= 0)
+
+    if (mouseRay.direction.y >= 0)                                          // What is the point at which the mouse ray intersects Y=0
     {
-      //Debug.LogError("Why is mouse pointing up?");
-      return Vector3.zero;
+      return Vector3.zero;                                                  // Why is mouse pointing up?
     }
+
     float rayLength = (mouseRay.origin.y / mouseRay.direction.y);
     return mouseRay.origin - (mouseRay.direction * rayLength);
   }
-
-
 }
