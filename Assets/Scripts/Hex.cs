@@ -5,8 +5,7 @@
 /// It does not interact with Unity directly but is rather a helper function
 /// </summary>
 
-public class Hex
-{
+public class Hex {
   public Hex(int q, int r, HexMap hexMap) // constructor
   {
     this.Q = q;
@@ -15,8 +14,7 @@ public class Hex
     this.HexMap = hexMap;
   }
 
-  public object this[string propertyName]
-  {
+  public object this[string propertyName] {
     get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
     set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
   }
@@ -42,8 +40,7 @@ public class Hex
   /// <summary>
   /// returns the world space position (vector 3) of the Hex (based on the q,r,s co ordinate system given to the Object)
   /// </summary>
-  public Vector3 Position()
-  {
+  public Vector3 Position() {
     return new Vector3(
         HexHorizontalSpacing() * (this.Q + this.R / 2f),
         0,
@@ -51,41 +48,34 @@ public class Hex
     );
   }
 
-  public float HexHeight()
-  {
+  public float HexHeight() {
     return radius * 2;
   }
 
-  public float HexWidth()
-  {
+  public float HexWidth() {
     return WIDTH_MULTIPLIER * HexHeight();
   }
 
-  public float HexVerticalSpacing()
-  {
+  public float HexVerticalSpacing() {
     return HexHeight() * 0.75f; // The amount to offset a neighbouring Hex by verticallly
   }
 
-  public float HexHorizontalSpacing()
-  {
+  public float HexHorizontalSpacing() {
     return HexWidth(); // The amount to offset a neighbouring Hex by verticallly
   }
 
   //Method overload to call directly from a single Hex
-  public Vector3 PositionFromCamera()
-  {
+  public Vector3 PositionFromCamera() {
     return HexMap.GetHexPosition(this);
   }
 
-  public Vector3 PositionFromCamera(Vector3 cameraPosition, int numColumns, int numRows)
-  {
+  public Vector3 PositionFromCamera(Vector3 cameraPosition, int numColumns, int numRows) {
     float mapWidth = numColumns * HexHorizontalSpacing();
     float mapHeight = numRows * HexVerticalSpacing();
 
     Vector3 position = Position();
 
-    if (allowWrapEastWest)
-    {
+    if (allowWrapEastWest) {
       float widthsFromCameraToHex = (position.x - cameraPosition.x) / mapWidth; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
 
       if (widthsFromCameraToHex > 0f)
@@ -97,8 +87,7 @@ public class Hex
 
       position.x -= numWidthsToFix * mapWidth;
     }
-    if (allowWrapNorthSouth)
-    {
+    if (allowWrapNorthSouth) {
       float heightsFromCameraToHex = (position.z - cameraPosition.z) / mapHeight; // we should always try keep this between -0.5 and 0.5 ie 1 mapWidthcentered on camera always
 
       if (heightsFromCameraToHex > 0f)
@@ -114,8 +103,7 @@ public class Hex
     return position;
   }
 
-  public static float Distance(Hex a, Hex b)
-  {
+  public static float Distance(Hex a, Hex b) {
     //@TODO: Fix for wrapping
     return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
   }

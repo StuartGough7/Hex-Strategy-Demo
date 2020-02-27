@@ -2,26 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMotion : MonoBehaviour
-{
+public class CameraMotion : MonoBehaviour {
   Vector3 positionOld;
 
-  void Start()
-  {
+  void Start() {
     positionOld = this.transform.position;
   }
 
-  void Update()
-  {
+  void Update() {
     CheckIfCameraMoved();
   }
 
   HexComponent[] hexes;
 
-  void CheckIfCameraMoved()
-  {
-    if (positionOld != this.transform.position)
-    {
+  void CheckIfCameraMoved() {
+    if (positionOld != this.transform.position) {
       // Something moved the camera.
       positionOld = this.transform.position;
 
@@ -31,8 +26,7 @@ public class CameraMotion : MonoBehaviour
 
       // TODO: Maybe there's a better way to cull what hexes get updated?
 
-      foreach (HexComponent hex in hexes)
-      {
+      foreach (HexComponent hex in hexes) {
         hex.UpdateHexPosition();
       }
     }

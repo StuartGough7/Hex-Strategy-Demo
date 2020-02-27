@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-public class MouseController : MonoBehaviour
-{
+public class MouseController : MonoBehaviour {
   int mouseDragThreshold = 1;                               // Threshold of mouse movement to start a drag
   Vector3 lastMousePosition;                                // From Input.mousePosition
   Vector3 lastMouseGroundPlanePosition;
@@ -9,31 +8,26 @@ public class MouseController : MonoBehaviour
   delegate void UpdateFunc();
   UpdateFunc Update_CurrentFunc;
 
-  void Start()
-  {
+  void Start() {
     Update_CurrentFunc = Update_DetectModeStart;
   }
 
-  void Update()
-  {
+  void Update() {
     Update_CurrentFunc();
     Update_ScrollZoom();
     lastMousePosition = Input.mousePosition;
   }
 
-  public void CancelUpdateFunc()
-  {
+  public void CancelUpdateFunc() {
     Update_CurrentFunc = Update_DetectModeStart;
   }
 
-  void Update_DetectModeStart()
-  {
+  void Update_DetectModeStart() {
     // Check here(?) to see if we are over a UI element,
     // if so -- ignore mouse clicks and such.
 
     if (Input.GetMouseButton(0) &&
-        Vector3.Distance(Input.mousePosition, lastMousePosition) > mouseDragThreshold)
-    {
+        Vector3.Distance(Input.mousePosition, lastMousePosition) > mouseDragThreshold) {
       // Left button is being held down AND the mouse moved? That's a camera drag!
       Update_CurrentFunc = Update_CameraDrag;
       lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
@@ -41,8 +35,7 @@ public class MouseController : MonoBehaviour
     }
   }
 
-  void Update_ScrollZoom()
-  {
+  void Update_ScrollZoom() {
     // Zoom to scrollwheel
     float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
     float minHeight = 2;
@@ -55,8 +48,7 @@ public class MouseController : MonoBehaviour
 
     // Stop zooming out at a certain distance.
     // TODO: Maybe you should still slide around at 20 zoom?
-    if (scrollAmount > 0 || p.y < (maxHeight - 0.1f))
-    {
+    if (scrollAmount > 0 || p.y < (maxHeight - 0.1f)) {
       cameraTargetOffset += dir * scrollAmount;
     }
     Vector3 lastCameraPosition = Camera.main.transform.position;
@@ -65,12 +57,10 @@ public class MouseController : MonoBehaviour
 
 
     p = Camera.main.transform.position;
-    if (p.y < minHeight)
-    {
+    if (p.y < minHeight) {
       p.y = minHeight;
     }
-    if (p.y > maxHeight)
-    {
+    if (p.y > maxHeight) {
       p.y = maxHeight;
     }
     Camera.main.transform.position = p;
@@ -83,10 +73,8 @@ public class MouseController : MonoBehaviour
     );
   }
 
-  void Update_CameraDrag()
-  {
-    if (Input.GetMouseButtonUp(0))
-    {
+  void Update_CameraDrag() {
+    if (Input.GetMouseButtonUp(0)) {
       CancelUpdateFunc();
       return;
     }
@@ -98,8 +86,7 @@ public class MouseController : MonoBehaviour
     lastMouseGroundPlanePosition = hitPos = MouseToGroundPlane(Input.mousePosition);
   }
 
-  Vector3 MouseToGroundPlane(Vector3 mousePos)
-  {
+  Vector3 MouseToGroundPlane(Vector3 mousePos) {
     Ray mouseRay = Camera.main.ScreenPointToRay(mousePos);
 
     if (mouseRay.direction.y >= 0)                                          // What is the point at which the mouse ray intersects Y=0

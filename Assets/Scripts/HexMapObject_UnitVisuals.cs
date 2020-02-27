@@ -2,29 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexMapObject_UnitVisuals : MonoBehaviour
-{
+public class HexMapObject_UnitVisuals : MonoBehaviour {
   Vector3 newPosition;
   Vector3 currentVelocity;
   float smoothTime = 0.5f;
 
-  void Start()
-  {
+  void Start() {
     newPosition = this.transform.position;
   }
 
-  void Update()
-  {
+  void Update() {
     this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
     // TODO: Figure out the best way to determine the end of our animation
-    if (Vector3.Distance(this.transform.position, newPosition) < 0.1f)
-    {
+    if (Vector3.Distance(this.transform.position, newPosition) < 0.1f) {
       //  GameObject.FindObjectOfType<HexMap>().AnimationIsPlaying = false;
     }
   }
 
-  public void OnUnitMoved(Hex oldHex, Hex newHex)
-  {
+  public void OnUnitMoved(Hex oldHex, Hex newHex) {
     // This GameObject is supposed to be a child of the hex we are
     // standing in. This ensures that we are in the correct place
     // in the hierachy
@@ -43,15 +38,12 @@ public class HexMapObject_UnitVisuals : MonoBehaviour
     newPosition.y += newHex.HexMap.GetHexGO(newHex).GetComponent<HexComponent>().VerticalOffset;
     this.transform.position = oldPosition;
 
-    if (Vector3.Distance(this.transform.position, newPosition) > 2)
-    {
+    if (Vector3.Distance(this.transform.position, newPosition) > 2) {
       // This OnUnitMoved is considerably more than the expected move
       // between two adjacent tiles -- it's probably a map seam thing,
       // so just teleport
       this.transform.position = newPosition;
-    }
-    else
-    {
+    } else {
       // TODO: WE need a better signalling system and/or animation queueing
       // GameObject.FindObjectOfType<HexMap>().AnimationIsPlaying = true;
     }

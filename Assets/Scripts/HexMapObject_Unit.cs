@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexMapObject_Unit : HexMapObject
-{
-  public HexMapObject_Unit()
-  {
+public class HexMapObject_Unit : HexMapObject {
+  public HexMapObject_Unit() {
     Name = "Default_Name";
   }
 
@@ -16,13 +14,11 @@ public class HexMapObject_Unit : HexMapObject
   public bool SkipThisUnit = false;
 
 
-  override public void SetHex(Hex newHex)
-  {
+  override public void SetHex(Hex newHex) {
     base.SetHex(newHex);
   }
 
-  override public void Destroy()
-  {
+  override public void Destroy() {
     base.Destroy();
   }
 }
