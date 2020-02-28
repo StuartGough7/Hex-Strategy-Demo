@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using QPath;
 
 /// <summary>
 /// The Hex Class is a pure C# data class which defines the grid position/ world space position / neighbours etc
 /// It does not interact with Unity directly but is rather a helper function
 /// </summary>
 
-public class Hex {
+public class Hex : IQPathTile {
   public Hex(int q, int r, HexMap hexMap) // constructor
   {
     this.Q = q;
@@ -26,6 +30,16 @@ public class Hex {
   public readonly int R; // Row
   public readonly int S; // Sum of Column and row ()
   public readonly HexMap HexMap;
+
+  public enum TERRAIN_TYPE { PLAINS, GRASSLANDS, MARSH, FLOODPLAINS, DESERT, LAKE, OCEAN }
+  public enum ELEVATION_TYPE { FLAT, HILL, MOUNTAIN, WATER }
+
+  public TERRAIN_TYPE TerrainType { get; set; }
+  public ELEVATION_TYPE ElevationType { get; set; }
+
+  public enum FEATURE_TYPE { NONE, FOREST, RAINFOREST, MARSH }
+  public FEATURE_TYPE FeatureType { get; set; }
+
 
   public float Elevation { get; set; }
   public float Moisture { get; set; }
@@ -107,4 +121,70 @@ public class Hex {
     //@TODO: Fix for wrapping
     return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
   }
+
+  //----------------------------- Path Queing -----------------------------------------
+
+  /// <summary>
+  /// Returns the most common movement cost for this tile, for a typical melee unit
+  /// </summary>
+  public int BaseMovementCost(bool isHillWalker, bool isForestWalker, bool isFlyer) {
+    if ((ElevationType == ELEVATION_TYPE.MOUNTAIN || ElevationType == ELEVATION_TYPE.WATER) && isFlyer == false)
+      return -99;
+
+    int moveCost = 1;
+
+    if (ElevationType == ELEVATION_TYPE.HILL && isHillWalker == false)
+      moveCost += 1;
+
+    if ((FeatureType == FEATURE_TYPE.FOREST || FeatureType == FEATURE_TYPE.RAINFOREST) && isForestWalker == false)
+      moveCost += 1;
+
+    return moveCost;
+  }
+
+
+  public static float CostEstimate(IQPathTile aa, IQPathTile bb) {
+    return Distance((Hex)aa, (Hex)bb);
+  }
+
+
+  Hex[] neighbours;
+
+  #region IQPathTile implementation
+  public IQPathTile[] GetNeighbours() {
+    if (this.neighbours != null)
+      return this.neighbours;
+
+    List<Hex> neighbours = new List<Hex>();
+
+    neighbours.Add(HexMap.GetHexAt(Q + 1, R + 0));
+    neighbours.Add(HexMap.GetHexAt(Q + -1, R + 0));
+    neighbours.Add(HexMap.GetHexAt(Q + 0, R + +1));
+    neighbours.Add(HexMap.GetHexAt(Q + 0, R + -1));
+    neighbours.Add(HexMap.GetHexAt(Q + +1, R + -1));
+    neighbours.Add(HexMap.GetHexAt(Q + -1, R + +1));
+
+    List<Hex> neighbours2 = new List<Hex>();
+
+    foreach (Hex h in neighbours) {
+      if (h != null) {
+        neighbours2.Add(h);
+      }
+    }
+
+    this.neighbours = neighbours2.ToArray();
+
+    return this.neighbours;
+  }
+
+  public float AggregateCostToEnter(float costSoFar, IQPathTile sourceTile, IQPathUnit theUnit) {
+    // TODO: We are ignoring source tile right now, this will have to change when
+    // we have rivers.
+    //
+    return ((HexMapObject_Unit)theUnit).AggregateTurnsToEnterHex(this, costSoFar); ;
+  }
+
+  #endregion
+
+
 }

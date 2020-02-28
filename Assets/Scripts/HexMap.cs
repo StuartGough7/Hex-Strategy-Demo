@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using QPath;
 
-public class HexMap : MonoBehaviour {
+
+public class HexMap : MonoBehaviour, IQPathWorld {
   public GameObject HexPrefab;
   public GameObject ForestPrefab;
   public GameObject JunglePrefab;
@@ -15,7 +17,7 @@ public class HexMap : MonoBehaviour {
   public Material MatDesert;
   public Material MatOcean;
   public Material MatPlain;
-  public Material MatGrassland;
+  public Material MatGrasslands;
   public Material MatMountain;
   public GameObject UnitDwarfPrefab;
   HexMapObject_Unit Dwarf = new HexMapObject_Unit();
@@ -56,6 +58,7 @@ public class HexMap : MonoBehaviour {
       Dwarf.SetHex(toMoveto);
     }
   }
+
   public Hex GetHexAt(int x, int y) {
     if (hexes == null) {
       //throw new UnityException("No Hex array to fetch from"); // This would be be a "loud" exception that will crash the code
@@ -64,7 +67,7 @@ public class HexMap : MonoBehaviour {
     }
 
     if (allowWrapEastWest) {
-      x = x % numColumns;    //NOTE!! the modulo on x to num rows. This is due to the wrapping west east. ie row -1 will be row numRows -1
+      x = x % numColumns;                                     //NOTE!! the modulo on x to num rows. This is due to the wrapping west east. ie row -1 will be row numRows -1
       if (x < 0) {
         x += numColumns;
       }
@@ -77,7 +80,7 @@ public class HexMap : MonoBehaviour {
     }
 
     if (x < 0 || y < 0) {
-      return null; // This is to retrieve the relevant area of the map even if there is overflow out of the map
+      return null;                                            // This is to retrieve the relevant area of the map even if there is overflow out of the map
     }
 
     return hexes[x, y];
@@ -117,22 +120,23 @@ public class HexMap : MonoBehaviour {
   virtual public void GenerateMap() {
     hexes = new Hex[numColumns, numRows];
     hexToGameObjectMap = new Dictionary<Hex, GameObject>();
-    // Generate map with ocean
+
     for (int column = 0; column < numColumns; column++) {
       for (int row = 0; row < numRows; row++) {
-        Hex hex = new Hex(column, row, this); // This is passing the HexMap to the Hex so it is aware of certain Map parameters
-        hex.Elevation = -0.5f; // initially all hexxes under water
+        Hex hex = new Hex(column, row, this);                               // This is passing the HexMap to the Hex so it is aware of certain Map parameters
+        hex.Elevation = -0.5f;                                              // initially all hexxes under water Generate map with ocean
         hexes[column, row] = hex;
 
         Vector3 postionFromCamera = hex.PositionFromCamera(Camera.main.transform.position, numColumns, numRows);
         //Instantiate Hex Object
         GameObject hexGO = Instantiate(HexPrefab, postionFromCamera, Quaternion.identity, this.transform);
-        hexGO.name = string.Format("Hex {0}, {1}", column, row); // naming the object in the Heirachy
-        hexToGameObjectMap.Add(hex, hexGO); // add the link between hex and gameObject. NOTE! you can add to a directionary with hexToGameObjectMap.Add(hex, hexGO) but this is fine too
+        hexGO.name = string.Format("Hex {0}, {1}", column, row);            // naming the object in the Heirachy
+        hexToGameObjectMap.Add(hex, hexGO);                                 // add the link between hex and gameObject. NOTE! you can add to a directionary with hexToGameObjectMap.Add(hex, hexGO) but this is fine too
 
-        hexGO.GetComponent<HexComponent>().Hex = hex; // Gives the Hex Component script reference to the instantiated hex
-        hexGO.GetComponent<HexComponent>().HexMap = this; // Gives the Hex Component script reference to the instantiated hex
-        hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}", column, row);
+        hex.TerrainType = Hex.TERRAIN_TYPE.OCEAN;
+        hex.ElevationType = Hex.ELEVATION_TYPE.WATER;
+        hexGO.GetComponent<HexComponent>().Hex = hex;                       // Gives the Hex Component script reference to the instantiated hex
+        hexGO.GetComponent<HexComponent>().HexMap = this;                   // Gives the Hex Component script reference to the instantiated hex
       }
     }
     UpdateHexVisuals();
@@ -144,53 +148,71 @@ public class HexMap : MonoBehaviour {
       for (int row = 0; row < numRows; row++) {
         Hex hex = hexes[column, row];
         GameObject hexGO = hexToGameObjectMap[hex];
-
+        HexComponent hexComp = hexGO.GetComponentInChildren<HexComponent>();
         MeshRenderer hexMR = hexGO.GetComponentInChildren<MeshRenderer>();
         MeshFilter hexMF = hexGO.GetComponentInChildren<MeshFilter>();
 
-        if (hex.Elevation >= HeightFlat && hex.Elevation < HeightMountain) {
-          if (hex.Moisture >= MoistureJungle) {
-            hexMR.material = MatGrassland;
-
-            // Spawn trees
-            Vector3 p = hexGO.transform.position;
-            if (hex.Elevation >= HeightHill) {
-              p.y += 0.25f;
-            }
-
-          } else if (hex.Moisture >= MoistureForest) {
-            hexMR.material = MatGrassland;
-
-            // Spawn trees
-            Vector3 p = hexGO.transform.position;
-            if (hex.Elevation >= HeightHill) {
-              p.y += 0.25f;
-            }
-            Instantiate(ForestPrefab, p, Quaternion.identity, hexGO.transform);
-          } else if (hex.Moisture >= MoistureGrasslands) {
-            hexMR.material = MatGrassland;
-          } else if (hex.Moisture >= MoisturePlains) {
-            hexMR.material = MatPlain;
-          } else {
-            hexMR.material = MatDesert;
-          }
-        }
-
-        if (hex.Elevation >= HeightMountain) {
-          hexMR.material = MatMountain;
-          hexMF.mesh = MeshMountain;
-        } else if (hex.Elevation >= HeightHill) {
-          hexMF.mesh = MeshHill;
-        } else if (hex.Elevation >= HeightFlat) {
-          hexMF.mesh = MeshFlat;
-        } else {
-          hexMR.material = MatOcean;
-          hexMF.mesh = MeshWater;
-        }
+        setHexTypeFromElevationAndMoisture(hex, hexMR, hexMF, hexGO, hexComp);
+        hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1} \n{2}", column, row, hex.BaseMovementCost(false, false, false));
 
       }
     }
+  }
 
+  void setHexTypeFromElevationAndMoisture(Hex h, MeshRenderer mr, MeshFilter mf, GameObject hexGO, HexComponent hexComp) {
+    if (h.Elevation >= HeightFlat && h.Elevation < HeightMountain) {
+      if (h.Moisture >= MoistureJungle) {
+        mr.material = MatGrasslands;
+        h.TerrainType = Hex.TERRAIN_TYPE.GRASSLANDS;
+        h.FeatureType = Hex.FEATURE_TYPE.RAINFOREST;
+
+        // Spawn trees
+        Vector3 p = hexGO.transform.position;
+        if (h.Elevation >= HeightHill) {
+          p.y += 0.25f;
+        }
+
+
+        GameObject.Instantiate(JunglePrefab, p, Quaternion.identity, hexGO.transform);
+      } else if (h.Moisture >= MoistureForest) {
+        mr.material = MatGrasslands;
+        h.TerrainType = Hex.TERRAIN_TYPE.GRASSLANDS;
+        h.FeatureType = Hex.FEATURE_TYPE.FOREST;
+
+        // Spawn trees
+        Vector3 p = hexGO.transform.position;
+        if (h.Elevation >= HeightHill) {
+          p.y += 0.25f;
+        }
+        GameObject.Instantiate(ForestPrefab, p, Quaternion.identity, hexGO.transform);
+      } else if (h.Moisture >= MoistureGrasslands) {
+        mr.material = MatGrasslands;
+        h.TerrainType = Hex.TERRAIN_TYPE.GRASSLANDS;
+      } else if (h.Moisture >= MoisturePlains) {
+        mr.material = MatPlain;
+        h.TerrainType = Hex.TERRAIN_TYPE.PLAINS;
+      } else {
+        mr.material = MatDesert;
+        h.TerrainType = Hex.TERRAIN_TYPE.DESERT;
+      }
+    }
+
+    if (h.Elevation >= HeightMountain) {
+      mr.material = MatMountain;
+      mf.mesh = MeshMountain;
+      h.ElevationType = Hex.ELEVATION_TYPE.MOUNTAIN;
+    } else if (h.Elevation >= HeightHill) {
+      h.ElevationType = Hex.ELEVATION_TYPE.HILL;
+      mf.mesh = MeshHill;
+      hexComp.VerticalOffset = 0.25f;
+    } else if (h.Elevation >= HeightFlat) {
+      h.ElevationType = Hex.ELEVATION_TYPE.FLAT;
+      mf.mesh = MeshFlat;
+    } else {
+      h.ElevationType = Hex.ELEVATION_TYPE.WATER;
+      mr.material = MatOcean;
+      mf.mesh = MeshWater;
+    }
   }
 
   public Hex[] GetHexesWithinRangeOf(Hex centerHex, int range) {
@@ -222,5 +244,4 @@ public class HexMap : MonoBehaviour {
     //unit.OnObjectDestroyed += OnUnitDestroyed;
     //unitToGameObjectMap.Add(unit, unitGO);
   }
-
 }
