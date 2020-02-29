@@ -57,6 +57,15 @@ public class HexMap : MonoBehaviour, IQPathWorld {
       Hex toMoveto = new Hex(29, 13, this);
       Dwarf.SetHex(toMoveto);
     }
+    if (Input.GetKeyDown("p")) {
+      Dwarf.DUMMY_PATHING_FUNCTION();
+    }
+    if (Input.GetKeyDown("space")) {
+      Dwarf.DoMove();
+    }
+    if (Input.GetKeyDown("n")) {
+      Dwarf.RefreshMovement();
+    }
   }
 
   public Hex GetHexAt(int x, int y) {
@@ -115,7 +124,6 @@ public class HexMap : MonoBehaviour, IQPathWorld {
     }
     return null;
   }
-
 
   virtual public void GenerateMap() {
     hexes = new Hex[numColumns, numRows];

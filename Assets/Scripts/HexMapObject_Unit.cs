@@ -23,12 +23,10 @@ public class HexMapObject_Unit : HexMapObject, IQPathUnit {
         Hex.HexMap,
         this,
         Hex,
-        Hex.HexMap.GetHexAt(Hex.Q + 6, Hex.R),
+        Hex.HexMap.GetHexAt(Hex.Q, Hex.R + 4),
         Hex.CostEstimate
     );
-
     Debug.Log("Got pathfinding path of length: " + pathHexes.Length);
-
     SetHexPath(pathHexes);
   }
 
@@ -62,17 +60,13 @@ public class HexMapObject_Unit : HexMapObject, IQPathUnit {
     int costToEnter = MovementCostToEnterHex(newHex);
 
     if (costToEnter > MovementRemaining && MovementRemaining < Movement && MOVEMENT_RULES_LIKE_CIV6) {
-      // We can't enter the hex this turn
-      return false;
+      return false; // We can't enter the hex this turn
     }
 
     hexPath.RemoveAt(0);
 
     if (hexPath.Count == 1) {
-      // The only hex left in the list, is the one we are moving to now,
-      // therefore we have no more path to follow, so let's just clear
-      // the queue completely to avoid confusion.
-      hexPath = null;
+      hexPath = null; // The only hex left in the list, is the one we are moving to thefore clear path 
     }
 
     // Move to the new Hex
@@ -80,6 +74,11 @@ public class HexMapObject_Unit : HexMapObject, IQPathUnit {
     MovementRemaining = Mathf.Max(MovementRemaining - costToEnter, 0);
 
     return hexPath != null && MovementRemaining > 0;
+  }
+
+  public void RefreshMovement() {
+    SkipThisUnit = false;
+    MovementRemaining = Movement;
   }
 
   public int MovementCostToEnterHex(Hex hex) {
